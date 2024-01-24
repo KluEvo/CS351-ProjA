@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>ColoredMulti-Object TODAY</title>
+</head>
+Hello theree. this is a typo.
+<br />
+
+<body onload="main()">
+  <canvas id="HTML5_canvas" width="500" height="500">
+    Please use a browser that supports HTML-5 "canvas" objects
+  </canvas>
+
+  <p>
+    <button type="button" onclick="runStop()"> Run/Stop</button>
+    <button type="button" onclick="spinDown()"> Decrease Spinrate by 10</button>
+    <button type="button" onclick="spinUp()">Increase Spinrate by 10</button>
+    <button type="button" onclick="spinMax()">Set Spinrate to max (100)</button>
+  </p>
+
+  <p><b>Guardian Controls</b>
+    <button type="button" onclick="blink()">Blink</button>
+    <button type="button" onclick="roll()">Roll</button>
+  </p>
+  <p><b>Wither Controls</b>
+    <button type="button" onclick="dance()">Dance!</button>
+    <input type="range" id="danceDurationSlider" min="500" max="1500" value="50" />
+  <p>Current Dance Duration: <span id="currentDuration"></span></p>
+
+  </p>
+  <p> <b>Other Things:</b>
+    <input type="checkbox" id="eyeballToggle" checked />
+    <label id=CurEyeballDisplay for="eyeballToggle">Mouse drag controls: Eyeball</label>
+  </p>
+
+  <p>Need Instructions? <button type="button" onclick=""> Click Me!</button></p>
+
+
+  <script src="lib/webgl-utils.js"></script>
+  <script src="lib/webgl-debug.js"></script>
+  <script src="lib/cuon-utils.js"></script>
+  <script src="lib/cuon-matrix-quat03.js"></script>
+  <script src="LuKeene_BASE.js"></script>
+</body>
+
+</html>
