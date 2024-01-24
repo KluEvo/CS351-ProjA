@@ -45,7 +45,9 @@ var myCanvas = document.getElementById('HTML5_canvas');
 
 var start = Date.now();
 var now = Date.now();
+var totaltimeDelta = 0;
 var g_last = now;
+var running = true;
 
 // Angle variables
 var spineRotation = 0.0;
@@ -175,14 +177,17 @@ function main() {
   var tick = function () {
     g_last = now;
     now = Date.now();
-    spineRotation = angleCalc(spineRotation, 1, now, g_last, ANGLE_STEP);
-    leftHeadAngle = (angleCalc(leftHeadAngle, 3, now, g_last, ANGLE_STEP) + 360) % 360;
-    rightHeadAngle = angleCalc(rightHeadAngle, -3, now, g_last, ANGLE_STEP) % 360;
-    fishFlap = angleCalcTrig(15, 10, now, start, ANGLE_STEP);
-    wanderX = angleCalcTrig(40, 0.5, now, start, ANGLE_STEP) - 1/3;
-    wiggle = angleCalcTrig(9, 5, now, start, ANGLE_STEP);
-    
-    witherRotation = angleCalcTrig(40, 90, now, start-900, ANGLE_STEP);
+
+    if (running){
+      totaltimeDelta += now - g_last
+      spineRotation = angleCalc(spineRotation, 1, now, g_last, ANGLE_STEP);
+      leftHeadAngle = (angleCalc(leftHeadAngle, 3, now, g_last, ANGLE_STEP) + 360) % 360;
+      rightHeadAngle = angleCalc(rightHeadAngle, -3, now, g_last, ANGLE_STEP) % 360;
+      fishFlap = angleCalcTrig(15, 10, totaltimeDelta, 0, ANGLE_STEP);
+      wanderX = angleCalcTrig(40, 0.5, totaltimeDelta, 0, ANGLE_STEP) - 1/3;
+      wiggle = angleCalcTrig(9, 5, totaltimeDelta, 0, ANGLE_STEP);
+      witherRotation = angleCalcTrig(40, 90, totaltimeDelta, -900, ANGLE_STEP);
+    }
 
     if (blinking != -1) {
       eyeblink = angleCalcTrig(6, 0.5, now, blinking, 50) + 0.5;
@@ -193,7 +198,7 @@ function main() {
 
     if (spinny != -1) {
       fishSpinAngle = angleCalc(fishSpinAngle, 5, now, g_last, 40)
-      console.log('fishSpinAngle=', fishSpinAngle);
+      // console.log('fishSpinAngle=', fishSpinAngle);
       if ((fishSpinAngle >= 359) || (fishSpinAngle < 0)){
         spinny = -1;
         fishSpinAngle = 0;
@@ -219,7 +224,7 @@ function main() {
 
 
     draw(modelMatrix, u_ModelLoc);   // Draw shapes
-    // console.log('danceAngle=', danceAngle);
+    // console.log('witherRotation=', witherRotation);
     // console.log('fishFlap=', fishFlap);
     requestAnimationFrame(tick, myCanvas);
     // Request that the browser re-draw the webpage
@@ -763,17 +768,17 @@ function draw_witherThing(modelMatrix, u_ModelLoc) {
   // move to "neck joint" of skeleton core
   modelMatrix.translate(0, 0.0, 0.3)
   modelMatrix.rotate(danceAngle, 0, 1, 0);
-  modelMatrix.translate(0, 0.0, 0.25)
   modelMatrix.rotate(-10, 1, 0, 0);
+  modelMatrix.translate(0, 0.0, 0.25)
 
   // move to top of neck and draw the main head
   pushMatrix(modelMatrix);
 
-  var headY = Math.min(Math.max(-headtrackDY*25, -45), 45)
-  var headX = Math.min(Math.max(headtrackDX*25, -80), 80)
+    var headY = Math.min(Math.max(-headtrackDY*25, -45), 45)
+    var headX = Math.min(Math.max(headtrackDX*25, -80), 80)
     modelMatrix.rotate(headY, 1, 0, 0);
     modelMatrix.rotate(headX, 0, 0, 1);
-    console.log(headtrackDX, headtrackDY)
+    // console.log(headtrackDX, headtrackDY)
 
     modelMatrix.translate(0, 0.0, 0.1);
     draw_head(modelMatrix, u_ModelLoc);
@@ -794,8 +799,8 @@ function draw_witherThing(modelMatrix, u_ModelLoc) {
     // move up and draw the mini right head
     modelMatrix.translate(0.0, 0.0, 0.3);
     modelMatrix.rotate(danceAngle, 0, 1, 0);
-    modelMatrix.translate(0.0, 0.0, 0.2);
     modelMatrix.rotate(-10, 1, 0, 0);
+    modelMatrix.translate(0.0, 0.0, 0.2);
     modelMatrix.translate(0, 0.0, 0.1);
     modelMatrix.rotate(-Math.abs(rightHeadAngle + 180)/2, 0, 0, 1);
     draw_head(modelMatrix, u_ModelLoc);
@@ -814,8 +819,8 @@ function draw_witherThing(modelMatrix, u_ModelLoc) {
     // move up and draw the mini left head
     modelMatrix.translate(0.0, 0.0, 0.3);
     modelMatrix.rotate(danceAngle, 0, 1, 0);
-    modelMatrix.translate(0.0, 0.0, 0.2);
     modelMatrix.rotate(-10, 1, 0, 0);
+    modelMatrix.translate(0.0, 0.0, 0.2);
     modelMatrix.translate(0, 0.0, 0.1);
     modelMatrix.rotate(Math.abs(leftHeadAngle - 180)/2, 0, 0, 1);
     draw_head(modelMatrix, u_ModelLoc);
@@ -1008,13 +1013,7 @@ function spinDown() {
 }
 
 function runStop() {
-  if (ANGLE_STEP * ANGLE_STEP > 1) {
-    myTmp = ANGLE_STEP;
-    ANGLE_STEP = 0;
-  }
-  else {
-    ANGLE_STEP = myTmp;
-  }
+  running = !running;
 }
 
 
