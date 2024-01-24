@@ -979,7 +979,7 @@ function angleCalcTrig(timescalar, maxAngle, now, start, angle_step, startAng = 
   //  limit the angle to move smoothly between +20 and -85 degrees:
   var elapsed = now - start;
   var newAngle = (angle_step * (elapsed) * (timescalar / 120) / (1000.0)) % (Math.PI*2) ;
-  console.log(newAngle)
+  
   return maxAngle * Math.cos(newAngle + startAng *(Math.PI /180));
 }
 
