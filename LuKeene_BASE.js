@@ -183,14 +183,14 @@ function main() {
       spineRotation = angleCalc(spineRotation, 1, now, g_last, ANGLE_STEP);
       leftHeadAngle = (angleCalc(leftHeadAngle, 3, now, g_last, ANGLE_STEP) + 360) % 360;
       rightHeadAngle = angleCalc(rightHeadAngle, -3, now, g_last, ANGLE_STEP) % 360;
-      fishFlap = angleCalcTrig(15, 10, totaltimeDelta, 0, ANGLE_STEP);
-      wanderX = angleCalcTrig(40, 0.5, totaltimeDelta, 0, ANGLE_STEP) - 1/3;
-      wiggle = angleCalcTrig(9, 5, totaltimeDelta, 0, ANGLE_STEP);
-      witherRotation = angleCalcTrig(40, 90, totaltimeDelta, -900, ANGLE_STEP);
+      fishFlap = angleCalcTrig(8, 10, totaltimeDelta, 0, 45);
+      wanderX = angleCalcTrig(3, 0.5, totaltimeDelta, 0, 45) - 1/3;
+      wiggle = angleCalcTrig(14, 5, totaltimeDelta, 0, 45);
+      witherRotation = angleCalcTrig(3, 90, totaltimeDelta, -900, 45);
     }
 
     if (blinking != -1) {
-      eyeblink = angleCalcTrig(6, 0.5, now, blinking, 50) + 0.5;
+      eyeblink = angleCalcTrig(20, 0.5, now, blinking, 50) + 0.5;
       if (eyeblink >= 0.99){
         blinking = -1;
       } 
@@ -208,7 +208,7 @@ function main() {
     if (danceStopTime >= now || Math.abs(danceAngle) > 5) {
       dancing = true
 
-      danceAngle = angleCalcTrig(5, 15, now, danceStopTime - danceDuration, 55, 90);
+      danceAngle = angleCalcTrig(25, 15, now, danceStopTime - danceDuration, 55, 90);
     }
     else if (dancing == true){
       danceAngle = 0
@@ -978,8 +978,8 @@ function angleCalcTrig(timescalar, maxAngle, now, start, angle_step, startAng = 
   // Update the current rotation angle (adjusted by the elapsed time)
   //  limit the angle to move smoothly between +20 and -85 degrees:
   var elapsed = now - start;
-  var newAngle = ((angle_step * elapsed) / (timescalar * 1000.0)) % (Math.PI*2);
-  // console.log(elapsed)
+  var newAngle = (angle_step * (elapsed) * (timescalar / 120) / (1000.0)) % (Math.PI*2) ;
+  console.log(newAngle)
   return maxAngle * Math.cos(newAngle + startAng *(Math.PI /180));
 }
 
@@ -1034,7 +1034,28 @@ function dance() {
   danceStopTime = Date.now() + danceDuration
 }
 
+function showKeys(){
+  alert("The following alerts will explain what interactions can be used.");
+  alert("The 'Blink' button makes the Guardian (fish like thing) blink its bid ol'"
+  +" eye, while 'Roll' will make it do a barrel roll!");
+  alert("Pressing the 'a' key will turn the Guardian towards its right.");
+  alert("Pressing the 'd' key will turn the Guardian towards its left.");
+  alert("The 'Dance' button will make the Wither (floaty guy with three heads) "
+  +"do a little jiggle movement.")
+  alert("The slider next to the 'Dance' button controls the minimum dance duration, while"
+  +" The current 'dance duration' is displayed underneath")
+  alert("Mouse drag also does things!")
+  alert("In fact, it can do to things depending on the toggle under 'Other Things'.")
+  alert("When the checkbocks is selected, as you click or drag around, the guardian"
+  +" will move its eye to look at your mouse.")
+  alert("If the checkbox is deselected, dragging around moves the direction the Wither's"
+  +" main head faces.")
+  alert("unlike withe the Guardian, the drag movement for the wither is cumulative, "
+  +"rather than facing your mouse.")
+  alert("You can see which mode your mouse drag movement is in via the text after the checkbox.")
 
+
+}
 
 function myKeyDown(kev) {
   //===============================================================================
