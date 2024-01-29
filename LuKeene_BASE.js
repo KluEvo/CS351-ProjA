@@ -171,12 +171,13 @@ function main() {
   
 // Also display our current mouse-dragging state:
 
-  updateSliderAndDisplay();
-  updateCheckboxState();
 
   var tick = function () {
     g_last = now;
     now = Date.now();
+
+    updateSliderAndDisplay();
+    updateCheckboxState();
 
     if (running){
       totaltimeDelta += now - g_last
@@ -864,7 +865,7 @@ function draw_guardian(modelMatrix, u_ModelLoc) {
         
         var pupilSize = 0.0375/2
         if (Math.abs(0.0375 * eyeblink) < Math.abs(-0.0375/2 + eyelocY) + pupilSize/2){
-          console.log(0.0375 * eyeblink , -0.0375/2 + eyelocY + pupilSize)
+          // console.log(0.0375 * eyeblink , -0.0375/2 + eyelocY + pupilSize)
           pupilSize = 0.0
         }
         // pupil
@@ -1153,10 +1154,19 @@ function myMouseDown(ev) {
     // report on webpage
     console.log('Mouse Down At: '+x.toFixed(g_digits)+', '+y.toFixed(g_digits));
 
-
+  if (eyeball){
     eyetrackDX = x + 1/3;
     eyetrackDY = y + 1/3;
-  
+    headtrackDX = 0.0;
+    headtrackDY = 0.0;
+  }
+  else{
+    eyetrackDX = 0.0;
+    eyetrackDY = 0.0;
+    headtrackDX = g_xMdragTot;
+    headtrackDY = g_yMdragTot;
+  }
+
 
 
 };
@@ -1236,6 +1246,18 @@ function myMouseUp(ev) {
   g_yMdragTot += (y - g_yMclik);
   // Report new mouse position:
   
+  if (eyeball){
+    eyetrackDX = x + 1/3;
+    eyetrackDY = y + 1/3;
+    headtrackDX = 0.0;
+    headtrackDY = 0.0;
+  }
+  else{
+    eyetrackDX = 0.0;
+    eyetrackDY = 0.0;
+    headtrackDX = g_xMdragTot;
+    headtrackDY = g_yMdragTot;
+  }
   
   console.log('Mouse Up At: '+x.toFixed(g_digits)+', '+y.toFixed(g_digits));
 };
@@ -1271,10 +1293,10 @@ function updateSliderAndDisplay() {
   const slider = document.getElementById("danceDurationSlider");
   const display = document.getElementById("currentDuration");
   
-  slider.value = danceDuration;
   document.getElementById("danceDurationSlider").addEventListener("input", function() {
     danceDuration = parseInt(this.value);
   });
+  slider.value = danceDuration;
   display.textContent = danceDuration;
 }
 
@@ -1285,6 +1307,12 @@ function updateCheckboxState() {
   document.getElementById("eyeballToggle").addEventListener("change", function() {
     eyeball = this.checked;
   });
+
+  if (!eyeball){
+    
+    eyetrackDX = 0.0;
+    eyetrackDY = 0.0;
+  }
 
 
 }
